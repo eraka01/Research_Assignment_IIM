@@ -18,7 +18,7 @@ if __name__ == "__main__":
     print("Number available CPU: {}".format(mp.cpu_count()))
 
     args = config.parser.parse_args()
-    args.pchgs_executable = str(next(Path("../pchgs/build").rglob("PCHGS*")))
+    args.pchgs_executable = "../pchgs/build/PCHGS"
     args = get_model_name(args)
     util.create_directories([args.dir_models])
     print(args)
@@ -27,13 +27,17 @@ if __name__ == "__main__":
     np_random_seed = np.random.seed(123)
 
     # load training instances
-    training_instances = util.load_training_instances(args)
+
+    training_instances = util.load_training_instances(args,max_instances=20)
+    print("load training instances", len(training_instances))
 
     # calculate features for training instances
     training_instances = create_features(args, training_instances)
+    print("calculate features for training instances")
 
     # initalize optimizer
     optim = Optimizer(args=args, num_features=training_instances[0]["features"].shape[1], num_edge_features=training_instances[0]["edge_features"].shape[1])
+    print("initalize optimizer")
 
     # optimizer trains ML-CO policy
     optim.train(training_instances)

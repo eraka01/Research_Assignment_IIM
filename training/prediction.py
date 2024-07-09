@@ -199,7 +199,8 @@ class NeuralNetwork():
         self.model = model
 
     def save_model(self, directory, count):
-        self.model.save(directory + "_iteration-" + str(count))
+        save_path = f"{directory}_epoch-{count}.keras"
+        self.model.save(save_path)
 
     def predict_profits(self, features, edge_features, edges):
         profits = self.model.predict(features.values, verbose=0)
@@ -213,6 +214,7 @@ class NeuralNetwork():
         return profits
 
     def grad_optimize(self, n, n_hat_mean, features, edge_features, edges):
+        print("reach")
         with tf.GradientTape() as tape_node:
             profits = tf.squeeze(self.model(features.values, training=True))
             correct_objective_profits = tf.math.reduce_sum(tf.multiply(profits, tf.squeeze(n.astype("float32"))))

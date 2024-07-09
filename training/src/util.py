@@ -62,12 +62,17 @@ def get_num_observations_avg(training_instances_collecter):
 
 
 
-def load_training_instances(args):
+def load_training_instances(args, max_instances=20):
     training_instances_directories = list(os.listdir(args.oracle_solutions_directory))
     training_instances_collecter = []
+    count = 0
     for training_instance_directory in training_instances_directories:
         if os.path.isfile(os.path.join(args.oracle_solutions_directory + training_instance_directory + "/best-sol.json")):
             training_instances_collecter.append(get_observation_and_solution(args, training_instance_directory))
+            count += 1
+            if max_instances and count >= max_instances:
+                break
+
     get_num_observations_avg(training_instances_collecter)
     return training_instances_collecter
 
